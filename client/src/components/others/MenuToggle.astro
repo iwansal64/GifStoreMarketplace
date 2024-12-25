@@ -1,0 +1,243 @@
+---
+
+const categories = {"Perlengkapan Rumah":["Listrik", "Air"], "Voucher":["Game", "Pulsa"]}
+const brands = {"Pulsa":["AXIS", "Telkomsel", "Tri"], "Shopping":["Shopee", "Tokopedia"], "Game":["Mobile Legends", ""]}
+
+---
+
+
+<div class="menu-toggle">
+    <input type="checkbox" name="toggle-menu" id="toggle-menu">
+</div>
+
+
+<div class="menu-wrapper">
+    <div class="menu">
+        <div class="field home-field">
+            <a href="/">Beranda</a>
+        </div>
+        <div class="field category-field">
+            <p>Kategori</p>
+            <div class="menu-field category-list">
+                {Object.keys(categories).map((key, index) => {
+                    return <div class="sub-category">
+                            <p>{key}</p>
+                            <ul>
+                                {Object.values(categories)[index].map(value => {
+                                    return <li><a href={"/search?category="+value}>{value}</a></li>
+                                })}
+                            </ul>
+                    </div>
+                })}
+            </div>
+        </div>
+        <div class="field brand-field">
+            <p>Brand</p>
+            <div class="menu-field brand-list">
+                {Object.keys(brands).map((key, index) => {
+                    return <div class="brands-by-category">
+                            <p>{key}</p>
+                            <ul>
+                                {Object.values(brands)[index].map(value => {
+                                    return <li><a href={"/search?brand="+value}>{value}</a></li>
+                                })}
+                            </ul>
+                    </div>
+                })}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    /* ----------------  MENU  ---------------- */
+    
+    div.menu {
+        position: absolute;
+        right: -100%;
+        
+        transform: translateX(100%);
+        
+        width: 50%;
+        height: 100%;
+        background-color: #fff;
+        padding: 20px;
+        padding-top: 100px;
+        box-sizing: border-box;
+        transition-duration: 0.5s;
+
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    div.menu > div.field {
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+
+        padding: 5px;
+        cursor: pointer;
+
+        font-weight: bold;
+        font-size: 1.4rem;
+    }
+
+    div.menu > div.field::after {
+        content: '';
+        
+        position: absolute;
+        left: 0;
+        bottom: -5px;
+        
+        width: 0;
+        height: 2px;
+
+        background-color: #000;
+        transition-duration: 0.45s;
+    }
+
+    div.menu > div.field:hover::after {
+        width: 100%;
+    }
+
+    div.menu > div.field > div.menu-field {
+        background: #555;
+        
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+
+        opacity: 0;
+        pointer-events: none;
+        transition: all 0.5s, pointer-events 0s 2s;
+
+        display:flex;
+        justify-content:center;
+        align-items:center;
+
+        height: max-content;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    div.menu > div.field:hover > div.menu-field, div.menu > div.field > div.menu-field:hover {
+        transform: translateX(-50%) translateY(1rem);
+        opacity: 1;
+        pointer-events: visible;
+        transition: all 0.5s;
+    }
+
+    div.menu > div.field > div.menu-field {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    div.menu > div.field > div.menu-field > div > p {
+        font-size: 1.2rem;
+    }
+    
+    div.menu > div.field > div.menu-field > div {
+        width: 90%;
+    }
+
+    div.menu > div.field > div.menu-field > div > ul{
+        width: 100%;
+    }
+
+    div.menu > div.field > div.menu-field > div > ul > li {
+        font-size: 1rem;
+        padding: 5px 0;
+        width: 100%;
+    }
+
+    /* ----------------  MENU WRAPPER  ---------------- */
+
+    div.menu-wrapper {
+        position: absolute;
+        top: 0;
+        right: -100%;
+        
+        transform: translateX(100%);
+        
+        width: 100%;
+        height: 100vh;
+
+        background-color: #000000cc;
+        transition-duration: 1s;
+    }
+
+    div.menu-toggle {
+        position: relative;
+        top: 50%;
+        transform:translateY(-50%);
+
+        aspect-ratio: 1 / 1;
+        height: 50%;
+        
+        background-color: transparent;
+        z-index: 100;    
+    }
+
+    div.menu-toggle > input {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translateX(-50%) translateY(-50%);
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+    }
+
+    div.menu-toggle::after, div.menu-toggle::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+
+        width: 100%;
+        height: 5px;
+        border-radius: 15px;
+
+        background: #000;
+        pointer-events: none;
+
+        transition-duration: 0.25s;
+    }
+
+    div.menu-toggle::after {
+        top: calc(50% + 10px);
+    }
+
+    div.menu-toggle::before {
+        top: calc(50% - 10px);
+    }
+
+    div.menu-toggle:has(input:checked)::after, div.menu-toggle:has(input:checked)::before {
+        top: 50%;
+    }
+    
+    div.menu-toggle:has(input:checked)::after {
+        transform: translateX(-50%) translateY(-50%) rotate(-135deg);
+    }
+
+    div.menu-toggle:has(input:checked)::before {
+        transform: translateX(-50%) translateY(-50%) rotate(-225deg);
+    }
+    
+    div.menu-toggle:has(input:checked) + div.menu-wrapper {
+        transform: translateX(0);
+        right: 0;
+        transition-duration: 0.25s;
+    }
+
+    div.menu-toggle:has(input:checked) + div.menu-wrapper > div.menu {
+        transform: translateX(0);
+        right: 0;
+        transition-duration: 0.75s;
+    }
+
+</style>

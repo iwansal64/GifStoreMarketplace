@@ -1,0 +1,24 @@
+---
+import Logo from "./others/Logo.astro";
+import MenuToggle from "./others/MenuToggle.astro";
+
+---
+
+<header class="header">
+    <Logo />
+    <MenuToggle />
+</header>
+
+<style>
+    header {
+        position: fixed;
+
+        width: 100vw;
+        padding: 10px;
+        box-sizing: border-box;
+        height: 100px;
+
+        display: flex;
+        justify-content: space-between;
+    }
+</style>

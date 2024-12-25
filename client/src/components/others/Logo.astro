@@ -1,0 +1,28 @@
+---
+
+import Image from "astro/components/Image.astro"
+import GIFStoreLogo from "../../assets/GIFStoreLogo.png";
+
+---
+
+<div class="logo">
+    <Image src={GIFStoreLogo} alt={"Logo"} width={100} />
+    <h1><span>GIF</span> Store Marketplace</h1>
+</div>
+
+<style>
+    .logo {
+        display: flex;
+        align-items: center;
+    }
+
+    .logo > h1 {
+        font-size: 1.5rem;
+        font-weight: 900;
+        letter-spacing: -0.5px;
+    }
+
+    .logo > h1 > span {
+        color: rgb(196, 0, 0);
+    }
+</style>

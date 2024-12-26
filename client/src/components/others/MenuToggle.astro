@@ -72,6 +72,12 @@ const brands = {"Pulsa":["AXIS", "Telkomsel", "Tri"], "Shopping":["Shopee", "Tok
         gap: 10px;
     }
 
+    @media (min-width: 600px) {
+        div.menu {
+            width: 50%;
+        }
+    }
+
     div.menu > div.field {
         position: relative;
         display: flex;
@@ -178,6 +184,7 @@ const brands = {"Pulsa":["AXIS", "Telkomsel", "Tri"], "Shopping":["Shopee", "Tok
     div.menu-toggle {
         position: relative;
         top: 50%;
+        right: 10px;
         transform:translateY(-50%);
 
         aspect-ratio: 1 / 1;
@@ -185,6 +192,8 @@ const brands = {"Pulsa":["AXIS", "Telkomsel", "Tri"], "Shopping":["Shopee", "Tok
         
         background-color: transparent;
         z-index: 100;    
+
+        cursor: pointer;
     }
 
     div.menu-toggle > input {
@@ -192,9 +201,12 @@ const brands = {"Pulsa":["AXIS", "Telkomsel", "Tri"], "Shopping":["Shopee", "Tok
         left: 50%;
         top: 50%;
         transform: translateX(-50%) translateY(-50%);
+
         width: 100%;
         height: 100%;
+        
         opacity: 0;
+        cursor: pointer;
     }
 
     div.menu-toggle::after, div.menu-toggle::before {
@@ -219,6 +231,24 @@ const brands = {"Pulsa":["AXIS", "Telkomsel", "Tri"], "Shopping":["Shopee", "Tok
 
     div.menu-toggle::before {
         top: calc(50% - 6px);
+    }
+
+    @media (min-width: 600px) {
+        div.menu-toggle {
+            height: 80%;
+        }
+        
+        div.menu-toggle::after, div.menu-toggle::before {
+            height: 6px;
+        }
+        
+        div.menu-toggle::after {
+            top: calc(50% + 10px);
+        }
+
+        div.menu-toggle::before {
+            top: calc(50% - 10px);
+        }
     }
 
     div.menu-toggle:has(input:checked)::after, div.menu-toggle:has(input:checked)::before {

@@ -154,6 +154,11 @@ const products_by_categories = {
         grid-auto-rows: 150px;
         gap: 10px;
     }
+    @media (min-width: 1000px) {
+        div.sub-products > div.products {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
 
     div.sub-products > div.products > a.product-card {
         width: 100%;
@@ -167,6 +172,13 @@ const products_by_categories = {
 
         background-color: #911;
         border-radius: 15px;
+
+        transition-duration: 0.25s;
+    }
+    
+    div.sub-products > div.products > a.product-card:hover {
+        scale: 1.05;
+        background-color: #f11;
     }
     
     div.sub-products > div.products > a.product-card > p.product-name {
@@ -181,5 +193,12 @@ const products_by_categories = {
         width: 25vw;
         height: 25vw;
         border-radius: 15px;
+    }
+
+    @media (min-width: 480px) {
+        img {
+            width: 100px;
+            height: 100px;
+        }
     }
 </style>

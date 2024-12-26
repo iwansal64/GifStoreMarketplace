@@ -32,7 +32,9 @@ const event_images = [Event1, Event2, Event3, Event4]
     const navigation_dots = Array.from(document.getElementsByClassName("navigation-dot"));
 
     let current_index = 0;
-
+    let auto_scroll_interval = setInterval(next, 6000);
+    let next_scroll_timeout = setTimeout(() => {}, 0);
+    
     update_event(0, true);
 
     function update_event(mode=1, first=false) {
@@ -82,6 +84,16 @@ const event_images = [Event1, Event2, Event3, Event4]
         events[current_index]?.classList.add("active");
     }
     
+    function back() {
+        current_index -= 1;
+        update_event(0);
+    }
+
+    function next() {
+        current_index += 1;
+        update_event(1);
+    }
+    
     navigation_dots.forEach(button => {
         button.addEventListener("click", () => {
             current_index = Number.parseInt(button.getAttribute("data-index") || "0");
@@ -90,14 +102,22 @@ const event_images = [Event1, Event2, Event3, Event4]
     })
 
     document.getElementsByClassName("left").item(0)?.addEventListener("click", () => {
-        current_index -= 1;
-        update_event(0);
-    })
+        back();
+        clearInterval(auto_scroll_interval);
+        clearTimeout(next_scroll_timeout);
+        next_scroll_timeout = setTimeout(() => {
+            auto_scroll_interval = setInterval(next, 6000);
+        }, 3000);
+    });
 
     document.getElementsByClassName("right").item(0)?.addEventListener("click", () => {
-        current_index += 1;
-        update_event(1);
-    })
+        next();
+        clearInterval(auto_scroll_interval);
+        clearTimeout(next_scroll_timeout);
+        next_scroll_timeout = setTimeout(() => {
+            auto_scroll_interval = setInterval(next, 6000);
+        }, 3000);
+    });
 </script>
 
 <style>
@@ -107,6 +127,12 @@ const event_images = [Event1, Event2, Event3, Event4]
         height: max-content;
         padding: 30px 0;
         background-color: rgb(168, 0, 0);
+    }
+
+    @media (min-width: 600px) {
+        div.events-container {
+            padding: 50px 0;
+        }
     }
 
     div.events-container > div.events-list {
@@ -191,14 +217,14 @@ const event_images = [Event1, Event2, Event3, Event4]
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        left: 0;
+        left: 10px;
     }
 
     div.events-container > .right {
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-        right: 0;
+        right: 10px;
     }
 
     div.event-navigation {
@@ -217,6 +243,12 @@ const event_images = [Event1, Event2, Event3, Event4]
         display: flex;
         gap: 5px;
         justify-content: center;
+    }
+
+    @media (min-width: 600px) {
+        div.event-navigation {
+            padding: 10px 20px;
+        }
     }
 
     div.event-navigation > button.navigation-dot {

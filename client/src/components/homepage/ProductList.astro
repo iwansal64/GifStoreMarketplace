@@ -1,0 +1,185 @@
+---
+import Image from "astro/components/Image.astro";
+
+import GI from "../../assets/products/GI.jpg";
+import HSR from "../../assets/products/HSR.jpg";
+import MLBB from "../../assets/products/MLBB.png";
+import PGR from "../../assets/products/PGR.jpg";
+import WOR from "../../assets/products/WOR.jpg";
+import ZZZ from "../../assets/products/ZZZ.jpg";
+import HG from "../../assets/products/HG.jpg";
+import TWC from "../../assets/products/TWC.jpg";
+import MR from "../../assets/products/MR.jpg";
+import HOK from "../../assets/products/HOK.png";
+
+type Product = {
+    image: ImageMetadata,
+    title: string,
+    link: string
+}
+
+const product: { [index: string]: Product } = {
+    "Genshin Impact": {
+        image: GI,
+        title: "Genshin Impact",
+        link: "/product/genshin-impact/"
+    },
+    "Honkai Starrail": {
+        image: HSR,
+        title: "Honkai Starrail",
+        link: "/product/honkai-starrail/"
+    },
+    "Mobile Legends": {
+        image: MLBB,
+        title: "Mobile Legends",
+        link: "/product/mobile-legends/"
+    },
+    "Watcher of Realms": {
+        image: WOR,
+        title: "Watcher of Realms",
+        link: "/product/watcher-realms/"
+    },
+    "Zoneless Zero": {
+        image: ZZZ,
+        title: "Zoneless Zero",
+        link: "/product/zoneless-zero/"
+    },
+    "Hago": {
+        image: HG,
+        title: "Hago",
+        link: "/product/hago/"
+    },
+    "Twitch": {
+        image: TWC,
+        title: "Twitch",
+        link: "/product/twitch/"
+    },
+    "Punishing Gray Raven": {
+        image: PGR,
+        title: "Punishing Gray Raven",
+        link: "/product/punishing-raven/"
+    },
+    "Mob Rush": {
+        image: MR,
+        title: "Mob Rush",
+        link: "/product/mob-rush/"
+    },
+    "Honor of Kings": {
+        image: HOK,
+        title: "Honor of Kings",
+        link: "/product/honor-kings/"
+    },
+}
+
+const products_by_categories = {
+    "Most Popular": [
+        product["Genshin Impact"],
+        product["Honkai Starrail"],
+        product["Mobile Legends"],
+    ],
+    "Mobile Games": [
+        product["Genshin Impact"],
+        product["Honkai Starrail"],
+        product["Zoneless Zero"],
+        product["Mobile Legends"],
+        product["Punishing Gray Raven"],
+        product["Honor of Kings"],
+        product["Mob Rush"],
+    ],
+    "PC Games": [
+        product["Watcher of Realms"],
+        product["Punishing Gray Raven"],
+        product["Genshin Impact"],
+        product["Honkai Starrail"],
+        product["Zoneless Zero"],
+    ],
+    "Social Apps": [
+        product["Hago"],
+        product["Twitch"],
+    ]
+}
+---
+
+<section class="products">
+    {Object.keys(products_by_categories).map((category, index) => {
+        return <>
+            <div class="sub-products">
+                <h1 class="sub-products-title">{category}</h1>
+                <div class="products">
+                    {Object.values(products_by_categories)[index].map(product => {
+                        return <a class="product-card" href={product.link}>
+                            <Image src={product.image} alt={"product : "+product.title} />
+                            <p class="product-name">{product.title}</p>
+                        </a>
+                    })}
+                </div>
+            </div>
+        </>
+    })}
+</section>
+
+<style>
+    section.products {
+        margin-top: 20px;
+        
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+
+        width: 95vw;
+        padding: 5px;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    div.sub-products {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    
+    div.sub-products > h1.sub-products-title {
+        font-family: 'Poppins', calibri;
+        font-size: 1.5rem;
+        font-weight: 200;
+    }
+    
+    div.sub-products > div.products {
+        margin-top: 10px;
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-auto-rows: 150px;
+        gap: 10px;
+    }
+
+    div.sub-products > div.products > a.product-card {
+        width: 100%;
+        height: 100%;
+        
+        
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-around;
+
+        background-color: #911;
+        border-radius: 15px;
+    }
+    
+    div.sub-products > div.products > a.product-card > p.product-name {
+        font-family: 'Poppins', calibri;
+        font-size: 1rem;
+        font-weight: 700;
+        text-align: center;
+        color: white;
+    }
+    
+    img {
+        width: 25vw;
+        height: 25vw;
+        border-radius: 15px;
+    }
+</style>

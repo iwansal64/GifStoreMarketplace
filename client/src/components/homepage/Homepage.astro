@@ -1,11 +1,13 @@
 ---
 
 import Events from "./Events.astro"
+import ProductList from "./ProductList.astro";
 
 ---
 
 <section class="homepage">
     <Events />
+    <ProductList />
 </section>
 
 <style>
@@ -14,8 +16,6 @@ import Events from "./Events.astro"
         width: 100vw;
 
         display: flex;
-        justify-content:center;
-        align-items:center;
+        flex-direction: column;
     }
-
 </style>

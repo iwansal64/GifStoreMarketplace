@@ -59,7 +59,7 @@ const brands = {"Pulsa":["AXIS", "Telkomsel", "Tri"], "Shopping":["Shopee", "Tok
         
         transform: translateX(100%);
         
-        width: 50%;
+        width: 80%; /* Navbar width */
         height: 100%;
         background-color: #fff;
         padding: 20px;
@@ -121,6 +121,9 @@ const brands = {"Pulsa":["AXIS", "Telkomsel", "Tri"], "Shopping":["Shopee", "Tok
         height: max-content;
         width: 100%;
         z-index: 1000;
+
+        border-radius: 25px;
+        padding: 10px;
     }
 
     div.menu > div.field:hover > div.menu-field, div.menu > div.field > div.menu-field:hover {
@@ -152,6 +155,8 @@ const brands = {"Pulsa":["AXIS", "Telkomsel", "Tri"], "Shopping":["Shopee", "Tok
         font-size: 1rem;
         padding: 5px 0;
         width: 100%;
+        font-weight: 200;
+        text-decoration: underline;
     }
 
     /* ----------------  MENU WRAPPER  ---------------- */
@@ -199,7 +204,7 @@ const brands = {"Pulsa":["AXIS", "Telkomsel", "Tri"], "Shopping":["Shopee", "Tok
         transform: translateX(-50%) translateY(-50%);
 
         width: 100%;
-        height: 5px;
+        height: 4px;
         border-radius: 15px;
 
         background: #000;
@@ -209,11 +214,11 @@ const brands = {"Pulsa":["AXIS", "Telkomsel", "Tri"], "Shopping":["Shopee", "Tok
     }
 
     div.menu-toggle::after {
-        top: calc(50% + 10px);
+        top: calc(50% + 6px);
     }
 
     div.menu-toggle::before {
-        top: calc(50% - 10px);
+        top: calc(50% - 6px);
     }
 
     div.menu-toggle:has(input:checked)::after, div.menu-toggle:has(input:checked)::before {

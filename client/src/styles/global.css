@@ -21,3 +21,13 @@ a {
 ul {
     list-style: none;
 }
+
+::-webkit-scrollbar {
+    background-color: white;
+    width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgb(168, 0, 0);
+    border-radius: 40px;
+}

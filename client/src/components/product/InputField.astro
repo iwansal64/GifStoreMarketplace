@@ -1,0 +1,421 @@
+---
+import { get_price_list } from "../../api/api_functions";
+import type { PriceData } from "../../api/api_functions";
+import { payments } from "../../typescript/payment_list";
+
+function price_to_rp(price: number) {
+    let result = "";
+
+    Array.from(price.toString()).reverse().forEach((char, index) => {
+        result = char + result;
+        if((index + 1) % 3 == 0 && index != price.toString().length - 1) {
+            result = "." + result;
+        }
+    })
+    
+    return "Rp. "+result+",00";
+}
+
+interface Props {
+    product_id: string
+}
+
+const { product_id } = Astro.props;
+
+console.log("INPUT FIELD");
+
+const response_price_list = await get_price_list(product_id);
+let price_list: PriceData[] = [];
+if(!Object.keys(response_price_list).includes("error")) {
+    price_list = response_price_list.result.map(value => {
+        const new_value = value;
+        new_value.product_name = value.product_name.replace(product_id || "", "");
+        return new_value;
+    })
+}
+else {
+    price_list = response_price_list.result;
+}
+console.log(price_list);
+
+
+---
+
+<section class="InputFields">
+    <div class="input_container requirements">
+        <div class="info">
+            <h1 class="title">User ID & Server ID</h1>
+            <p class="description">Put your User ID and Server ID below in order to proceed</p>
+        </div>
+        <div class="input_field">
+            <input type="text" placeholder="User ID" name="user_id">
+            <input type="text" placeholder="Server ID" name="server_id">
+        </div>
+    </div>
+    <div class="input_container price-list">
+        <div class="info">
+            <h1 class="title">Select Top-Up!</h1>
+            <p class="description">How much do you want to top up?</p>
+        </div>
+        <div class="input_field">
+            {price_list.map(price_info => {
+                return <div class="price-card" data-price={price_to_rp(price_info.price)} data-content={price_info.product_name}>
+                    <p class="content">{price_info.product_name}</p>
+                    <p class="price">{price_to_rp(price_info.price)}</p>
+                </div>
+            })}
+        </div>
+    </div>
+    <div class="input_container payment-list">
+        <div class="info">
+            <h1 class="title">Payments</h1>
+            <p class="description">What payment methods that does suits you?</p>
+        </div>
+        <div class="input_field">
+            {payments.map(payment => {
+                return <div class="payment-card" data-url={payment.url} data-payment={payment.name}>
+                    <p class="content">{payment.name}</p>
+                </div>
+            })}
+        </div>
+    </div>
+    <div class="input_container buy">
+        <div class="info">
+            <h1 class="title">Buy</h1>
+            <div class="desc">This is the last step, Let's end this!</div>
+            <div class="price-desc">
+                <div>
+                    <p class="content-info">Please, complete your transaction.</p>
+                    <p class="payment-info"></p>
+                </div>
+                <p class="price-info"></p>
+            </div>
+        </div>
+        <div class="input_field">
+            <button class="submit-btn" disabled>Submit</button>
+            <div class="confirmation">
+                <input type="checkbox" class="confirmation" />
+                <p>Please, make sure everything is good before continue :)</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    //? Type and Variables
+    const submit_btn = document.getElementsByClassName("submit-btn")[0];
+    const confirmation_checkbox = document.getElementsByClassName("confirmation")[0];
+    confirmation_checkbox.addEventListener("change", () => {
+        submit_btn.toggleAttribute("disabled");
+    })
+    
+    type KeyValuePairs = {
+        key: string,
+        value: string
+    };
+
+    let informations: {
+        content?: string,
+        price?: string,
+        payment?: string,
+        input_field?: KeyValuePairs[]
+    } = {
+        input_field: []
+    }
+    const content_info = document.getElementsByClassName("content-info")[0];
+    const price_info = document.getElementsByClassName("price-info")[0];
+    const payment_info = document.getElementsByClassName("payment-info")[0];
+    const input_fields = document.getElementsByClassName("input_field")[0];
+
+    const priceCards = Array.from(document.getElementsByClassName("price-card"));
+    const paymentCards = Array.from(document.getElementsByClassName("payment-card"));
+
+    //? Handling Data
+    function send_data() {
+        informations.input_field = [];
+        Array.from(input_fields.children).forEach(input_field => {
+            if(input_field.hasAttribute("name")) {
+                if(input_field.getAttribute("name")||"".length > 0 && input_field.nodeValue !== "") {
+                    informations.input_field?.push({
+                        key: input_field.getAttribute("name")||"",
+                        value: (input_field as HTMLInputElement).value||""
+                    });
+                }
+            }
+        })
+    }
+
+    submit_btn.addEventListener("click", () => {
+        send_data();
+    })
+
+    //? Update Information
+    function update_info() {
+        content_info.innerHTML = "Content: <b>" + informations["content"] + "</b>";
+        price_info.innerHTML = informations["price"] || "";
+        payment_info.innerHTML = informations["payment"]?("Payment: <b>" + informations["payment"] + "</b>"):"please choose payment method";
+    }
+    
+    priceCards.forEach(priceCard => {
+        priceCard.addEventListener("click", () => {
+            priceCards.forEach(element => {
+                element.classList.remove("active");
+            })
+            priceCard.classList.add("active");
+            informations["content"] = priceCard.getAttribute("data-content") || "";
+            informations["price"] = priceCard.getAttribute("data-price") || "";
+            update_info();
+        })
+    })
+
+    paymentCards.forEach(paymentCard => {
+        paymentCard.addEventListener("click", () => {
+            paymentCards.forEach(element => {
+                element.classList.remove("active");
+            })
+            paymentCard.classList.add("active");
+            informations["payment"] = paymentCard.getAttribute("data-payment") || "";
+            update_info();
+        })
+    })
+</script>
+
+<style>
+    section {
+        position: relative;
+        left: 50%;
+        transform: translateX(-50%);
+
+        width: 90vw;
+        
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 10px;
+    }
+
+    @media (min-width: 900px) {
+        section {
+            display: grid;
+            grid-auto-rows: 200px;
+            grid-template-areas: "requirements price-list price-list"
+                                 "payments price-list price-list"
+                                 "buy buy buy";
+            gap: 5px;
+        }
+
+        section > div.input_container {
+            width: 100%;
+            height: 100%;
+        }
+        
+        section > div.input_container.requirements {
+            grid-area: requirements;
+        }
+
+        section > div.input_container.price-list {
+            grid-area: price-list;
+        }
+
+        section > div.input_container.payments {
+            grid-area: payments;
+        }
+
+        section > div.input_container.buy {
+            grid-area: buy;
+        }
+    }
+    
+    div.input_container {
+        background-color: #911;
+        padding: 10px;
+        box-sizing: border-box;
+        border-radius: 15px;
+        width: 100%;
+    }
+
+    div.input_container > div.info {
+        display: flex;
+        flex-direction: column;
+        color: white;
+    }
+
+    div.input_container > div.info > h1 {
+        font-size: 1.2rem;
+    }
+
+    div.input_container > div.info > p {
+        font-size: 0.9rem;
+    }
+
+    div.input_container > div.input_field {
+        margin-top: 10px;
+    }
+
+    div.input_container.requirements > div.input_field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    /* ----- PRICE LIST ----- */
+    div.input_container.price-list > div.input_field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        max-height: 500px;
+        overflow: hidden auto;
+    }
+
+    @media (min-width: 600px) {
+        div.input_container.price-list > div.input_field {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    div.input_container.price-list > div.input_field > div.price-card {
+        background-color: #00000055;
+        padding: 10px;
+        box-sizing: border-box;
+        color: white;
+        cursor: pointer;
+        border-radius: 10px;
+        transition-duration: 0.25s;
+    }
+
+    div.input_container.price-list > div.input_field > div.price-card:hover {
+        background-color: #00000099;
+    }
+
+    div.input_container.price-list > div.input_field > div.price-card.active {
+        background-color: #000000bb;
+    }
+
+    div.input_container.price-list > div.input_field > div.price-card > p.content {
+        font-size: 0.8rem;
+    }
+
+    div.input_container.price-list > div.input_field > div.price-card > p.price {
+        font-size: 0.8rem;
+    }
+
+    /* ----- PAYMENT LIST ----- */
+    div.input_container.payment-list > div.input_field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    @media (min-width: 600px) {
+        div.input_container.payment-list > div.input_field {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    div.input_container.payment-list > div.input_field > div.payment-card {
+        background-color: #00000055;
+        padding: 10px;
+        box-sizing: border-box;
+        color: white;
+        cursor: pointer;
+        border-radius: 10px;
+        transition-duration: 0.25s;
+    }
+
+    div.input_container.payment-list > div.input_field > div.payment-card:hover {
+        background-color: #00000099;
+    }
+
+    div.input_container.payment-list > div.input_field > div.payment-card.active {
+        background-color: #000000bb;
+    }
+
+    div.input_container.payment-list > div.input_field > div.payment-card > p.content {
+        font-size: 0.8rem;
+    }
+
+    div.input_container.payment-list > div.input_field > div.payment-card > p.price {
+        font-size: 0.8rem;
+    }
+
+    /* ----- BUY ----- */
+    div.input_container.buy {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    @media(min-width: 600px) {
+        div.input_container.buy {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    div.input_container.buy > div.info > div.desc {
+        font-size: 0.8rem;
+    }
+
+    div.input_container.buy > div.info > div.price-desc {
+        margin-top: 20px;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+    
+    div.input_container.buy > div.info > div.price-desc > div {
+        font-size: 0.8rem;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    
+    div.input_container.buy > div.info > div.price-desc > p.price-info {
+        margin-top: 20px;
+        font-size: 1.3rem;
+    }
+
+    div.input_container.buy > div.input_field {
+        margin-top: 20px;
+    }
+    
+    @media (min-width: 600px) {
+        div.input_container.buy > div.input_field {
+            margin-top: 0;
+        }
+    }
+    
+    div.input_container.buy > div.input_field > button.submit-btn {
+        padding: 10px 40px;
+        border-radius: 20px;
+        transition-duration: 0.25s;
+    }
+    
+    div.input_container.buy > div.input_field > button.submit-btn:hover {
+        border-color: #f00;
+    }
+
+    div.input_container.buy > div.input_field > button.submit-btn:disabled {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    div.input_container.buy > div.input_field > div.confirmation {
+        margin-top: 10px;
+
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+    
+    div.input_container.buy > div.input_field > div.confirmation > p {
+        font-size: 0.8rem;
+        color: white;
+        opacity: 0.6;
+    }
+
+    div.input_container.buy > div.input_field > div.confirmation > input:checked + p {
+        opacity: 1;
+    }
+</style>

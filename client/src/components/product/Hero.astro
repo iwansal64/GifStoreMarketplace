@@ -1,0 +1,54 @@
+---
+import Image from "astro/components/Image.astro";
+
+const { hero_image, title } = Astro.props;
+
+---
+
+<section class="hero">
+    <div class="image-wrapper">
+        <Image src={hero_image} alt={"Hero Image"} />
+    </div>
+    <h1 class="title">{title}</h1>
+</section>
+
+<style>
+    section {
+        margin-top: 80px;
+    }
+
+    h1 {
+        font-weight: 700;
+        letter-spacing: -0.4px;
+        margin-top: 10px;
+    }
+    
+    div.image-wrapper {
+        position: relative;
+        
+        width: 100vw;
+        height: calc(100vw * 241 / 640);
+
+        background-color: transparent;
+        overflow: hidden;
+    }
+    
+    div.image-wrapper::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        width: 100%;
+        height: 100%;
+
+        background-image: linear-gradient(to bottom, transparent, #ff000066);
+    }
+    
+    img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+</style>

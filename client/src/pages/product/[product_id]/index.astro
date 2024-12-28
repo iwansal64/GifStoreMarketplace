@@ -1,0 +1,27 @@
+---
+import { product } from "../../../typescript/product_list";
+import Header from "../../../components/Header.astro";
+import Hero from "../../../components/product/Hero.astro";
+import InputField from "../../../components/product/InputField.astro";
+
+import Layout from '../../../layouts/Layout.astro';
+
+export function getStaticPaths() {
+    return Object.values(product).map(product_data => {
+        return {params: {product_id: product_data.id}}
+    })
+}
+
+const { product_id } = Astro.params;
+console.log("INDEX");
+
+const product_data = Object.values(product).find(value => {
+    return value.id == product_id
+});
+
+---
+<Layout page_title={"Product - "+product_data?.title}>
+    <Header />
+    <Hero hero_image={product_data?.image_hero} title={product_data?.title} />
+    <InputField product_id={product_id} />
+</Layout>

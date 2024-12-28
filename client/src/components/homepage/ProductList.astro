@@ -1,75 +1,7 @@
 ---
 import Image from "astro/components/Image.astro";
 
-import GI from "../../assets/products/GI.jpg";
-import HSR from "../../assets/products/HSR.jpg";
-import MLBB from "../../assets/products/MLBB.png";
-import PGR from "../../assets/products/PGR.jpg";
-import WOR from "../../assets/products/WOR.jpg";
-import ZZZ from "../../assets/products/ZZZ.jpg";
-import HG from "../../assets/products/HG.jpg";
-import TWC from "../../assets/products/TWC.jpg";
-import MR from "../../assets/products/MR.jpg";
-import HOK from "../../assets/products/HOK.png";
-
-type Product = {
-    image: ImageMetadata,
-    title: string,
-    link: string
-}
-
-const product: { [index: string]: Product } = {
-    "Genshin Impact": {
-        image: GI,
-        title: "Genshin Impact",
-        link: "/product/genshin-impact/"
-    },
-    "Honkai Starrail": {
-        image: HSR,
-        title: "Honkai Starrail",
-        link: "/product/honkai-starrail/"
-    },
-    "Mobile Legends": {
-        image: MLBB,
-        title: "Mobile Legends",
-        link: "/product/mobile-legends/"
-    },
-    "Watcher of Realms": {
-        image: WOR,
-        title: "Watcher of Realms",
-        link: "/product/watcher-realms/"
-    },
-    "Zoneless Zero": {
-        image: ZZZ,
-        title: "Zoneless Zero",
-        link: "/product/zoneless-zero/"
-    },
-    "Hago": {
-        image: HG,
-        title: "Hago",
-        link: "/product/hago/"
-    },
-    "Twitch": {
-        image: TWC,
-        title: "Twitch",
-        link: "/product/twitch/"
-    },
-    "Punishing Gray Raven": {
-        image: PGR,
-        title: "Punishing Gray Raven",
-        link: "/product/punishing-raven/"
-    },
-    "Mob Rush": {
-        image: MR,
-        title: "Mob Rush",
-        link: "/product/mob-rush/"
-    },
-    "Honor of Kings": {
-        image: HOK,
-        title: "Honor of Kings",
-        link: "/product/honor-kings/"
-    },
-}
+import { product } from "../../typescript/product_list";
 
 const products_by_categories = {
     "Most Popular": [
@@ -80,23 +12,13 @@ const products_by_categories = {
     "Mobile Games": [
         product["Genshin Impact"],
         product["Honkai Starrail"],
-        product["Zoneless Zero"],
         product["Mobile Legends"],
-        product["Punishing Gray Raven"],
         product["Honor of Kings"],
-        product["Mob Rush"],
     ],
     "PC Games": [
-        product["Watcher of Realms"],
-        product["Punishing Gray Raven"],
         product["Genshin Impact"],
         product["Honkai Starrail"],
-        product["Zoneless Zero"],
     ],
-    "Social Apps": [
-        product["Hago"],
-        product["Twitch"],
-    ]
 }
 ---
 
@@ -107,7 +29,7 @@ const products_by_categories = {
                 <h1 class="sub-products-title">{category}</h1>
                 <div class="products">
                     {Object.values(products_by_categories)[index].map(product => {
-                        return <a class="product-card" href={product.link}>
+                        return <a class="product-card" href={"/product/"+product.id}>
                             <Image src={product.image} alt={"product : "+product.title} />
                             <p class="product-name">{product.title}</p>
                         </a>

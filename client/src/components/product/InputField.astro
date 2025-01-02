@@ -27,14 +27,10 @@ console.log("INPUT FIELD");
 const response_price_list = await get_price_list(product_id);
 let price_list: PriceData[] = [];
 if(!Object.keys(response_price_list).includes("error")) {
-    price_list = response_price_list.result.map(value => {
-        const new_value = value;
-        new_value.product_name = value.product_name.replace(product_id || "", "");
-        return new_value;
-    })
+    price_list = (response_price_list.result).sort((a, b) => a.price - b.price);
 }
 else {
-    price_list = response_price_list.result;
+    price_list = (response_price_list.result).sort((a, b) => a.price - b.price);
 }
 console.log(price_list);
 

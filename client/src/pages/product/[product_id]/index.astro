@@ -3,6 +3,8 @@ import { product } from "../../../typescript/product_list";
 import Header from "../../../components/Header.astro";
 import Hero from "../../../components/product/Hero.astro";
 import InputField from "../../../components/product/InputField.astro";
+import LoadingFallback from "../../../components/LoadingFallback.astro";
+import BasicFallback from "../../../components/BasicFallback.astro";
 
 import Layout from '../../../layouts/Layout.astro';
 
@@ -23,5 +25,8 @@ const product_data = Object.values(product).find(value => {
 <Layout page_title={"Product - "+product_data?.title}>
     <Header />
     <Hero hero_image={product_data?.image_hero} title={product_data?.title} />
-    <InputField product_id={product_id} />
+    <LoadingFallback>
+        <BasicFallback slot="fallback" />
+        <InputField product_id={product_id} slot="content" />
+    </LoadingFallback>
 </Layout>
